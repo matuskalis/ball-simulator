@@ -1,0 +1,8 @@
+{
+  "name": "trail",
+  "preset": "trail",
+  "seed": 6,
+  "durationSeconds": 20,
+  "music": { "melody": "canon-in-d", "instrument": "pluck" },
+  "style": { "background": "#03030a" }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "pit",
+  "preset": "pit",
+  "seed": 23,
+  "durationSeconds": 20,
+  "music": { "melody": "ode-to-joy", "instrument": "piano" }
+}

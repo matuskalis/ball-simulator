@@ -1,0 +1,8 @@
+{
+  "name": "spiral",
+  "preset": "spiral",
+  "seed": 14,
+  "durationSeconds": 20,
+  "music": { "melody": "moonlight-sonata", "instrument": "sine" },
+  "style": { "background": "#050510" }
+}

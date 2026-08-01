@@ -1,0 +1,7 @@
+{
+  "name": "swarm",
+  "preset": "swarm",
+  "seed": 19,
+  "durationSeconds": 20,
+  "music": { "melody": "chromatic", "instrument": "square" }
+}

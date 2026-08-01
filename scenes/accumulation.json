@@ -1,0 +1,8 @@
+{
+  "name": "accumulation",
+  "preset": "accumulation",
+  "seed": 8,
+  "durationSeconds": 20,
+  "music": { "melody": "pentatonic", "instrument": "bell" },
+  "style": { "showCounter": true, "title": "until it fills" }
+}
