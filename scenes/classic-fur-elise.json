@@ -1,0 +1,7 @@
+{
+  "name": "classic-fur-elise",
+  "preset": "classic",
+  "seed": 7,
+  "durationSeconds": 20,
+  "music": { "melody": "fur-elise", "instrument": "piano" }
+}

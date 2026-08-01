@@ -1,0 +1,8 @@
+{
+  "name": "destruction",
+  "preset": "destruction",
+  "seed": 2,
+  "durationSeconds": 20,
+  "music": { "melody": "moonlight-sonata", "instrument": "piano" },
+  "style": { "wallColor": "#ff2e88", "title": "every hit breaks the wall" }
+}

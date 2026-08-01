@@ -1,0 +1,8 @@
+{
+  "name": "infinite-loop",
+  "preset": "infinite-loop",
+  "seed": 5,
+  "durationSeconds": 18,
+  "music": { "melody": "pentatonic", "instrument": "pluck" },
+  "style": { "showCounter": true }
+}

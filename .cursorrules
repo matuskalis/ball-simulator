@@ -1,0 +1,3 @@
+Read AGENTS.md before answering any request about generating a video in this repo. It is the full contract.
+
+Short version: pick a preset, write scenes/<slug>.json, run `npm run validate -- scenes/<slug>.json`, then `npm run make -- scenes/<slug>.json`. Never edit src/ to satisfy a video request; everything a user can ask for is a config change.

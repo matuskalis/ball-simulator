@@ -1,0 +1,26 @@
+{
+  "name": "ball-simulator",
+  "version": "1.0.0",
+  "description": "Prompt-driven bouncing ball simulator. Agents turn a user prompt into a scene JSON, this renders a vertical MP4 with note-on-bounce audio.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "make": "tsx src/cli/make.ts",
+    "validate": "tsx src/cli/validate.ts",
+    "modes": "tsx src/cli/modes.ts",
+    "dev": "remotion studio",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}

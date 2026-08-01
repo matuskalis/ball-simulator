@@ -1,0 +1,8 @@
+{
+  "name": "escape-rings",
+  "preset": "escape",
+  "seed": 11,
+  "durationSeconds": 22,
+  "music": { "melody": "canon-in-d", "instrument": "bell" },
+  "style": { "background": "#04070f" }
+}

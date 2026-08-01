@@ -1,0 +1,8 @@
+{
+  "name": "growth-tetris",
+  "preset": "growth",
+  "seed": 3,
+  "durationSeconds": 25,
+  "music": { "melody": "korobeiniki", "instrument": "square" },
+  "style": { "title": "the ball grows every bounce", "showCounter": true }
+}
