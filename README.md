@@ -53,6 +53,10 @@ A scene file is a preset plus the fields you want to override:
 
 Contacts slower than 55 px/s are treated as resting jitter: the ball still bounces off, but no note and no effect fires. That is what stops a settled ball from machine-gunning the melody.
 
+## Render speed
+
+A 6s 1080x1920 60fps clip renders in about 7 seconds on an M-series laptop, so a 20s video is well under a minute. A 260-ball scene is roughly 1.5x that.
+
 ## Audio and licensing
 
 Built-in melodies are public-domain (Für Elise, Ode to Joy, Korobeiniki, Canon in D, and similar) or plain scales. You can also pass an array of MIDI note numbers or a path to your own `.mid` file. Do not ship copyrighted melodies transcribed as note arrays.

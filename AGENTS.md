@@ -123,4 +123,4 @@ User: "one ball turns into a thousand, show the counter, make it chaotic"
 
 ## Cost
 
-A 20s 1080x1920 60fps render takes roughly 1 to 3 minutes on a laptop. Heavy scenes (`maxBalls` in the hundreds, long `trailLength`) are slower. Drop `fps` to 30 or `durationSeconds` to 5 for a quick look before committing to the full render.
+Measured on an M-series laptop: a 6s 1080x1920 60fps clip renders in about 7 seconds, so a 20s scene lands well under a minute. Heavy scenes (`maxBalls` in the hundreds, long `trailLength`) run roughly 1.5x that. Still worth rendering a 5s version first when you are unsure the look matches what the user asked for.
