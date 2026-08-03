@@ -1,0 +1,26 @@
+{
+  "name": "02a-speed-demon-tiny",
+  "preset": "classic",
+  "seed": 201,
+  "durationSeconds": 15,
+  "launchSpeed": 1000,
+  "arena": {
+    "radius": 240
+  },
+  "physics": {
+    "gravity": 3000,
+    "ballRadius": 10,
+    "maxSpeed": 4200
+  },
+  "effects": {
+    "speedUpOnBounce": 1.035
+  },
+  "music": {
+    "melody": "korobeiniki",
+    "instrument": "square"
+  },
+  "style": {
+    "title": "it only gets faster",
+    "showCounter": true
+  }
+}

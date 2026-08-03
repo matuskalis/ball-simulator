@@ -1,0 +1,33 @@
+{
+  "name": "05c-gauntlet-chiptune",
+  "preset": "escape",
+  "seed": 503,
+  "durationSeconds": 12,
+  "arena": {
+    "ringCount": 10,
+    "ringSpacing": 30,
+    "ringGapDegrees": 42,
+    "ringSpeed": 55
+  },
+  "physics": {
+    "gravity": 2000,
+    "ballRadius": 14
+  },
+  "effects": {
+    "breakWalls": true
+  },
+  "music": {
+    "melody": "korobeiniki",
+    "instrument": "square"
+  },
+  "style": {
+    "title": "find the gap",
+    "palette": [
+      "#ff4d00",
+      "#ffb300",
+      "#ff0055",
+      "#ffe066",
+      "#ff7a00"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "01c-wall-breaker-ice",
+  "preset": "destruction",
+  "seed": 103,
+  "durationSeconds": 20,
+  "launchSpeed": 1200,
+  "arena": {
+    "radius": 300,
+    "segments": 140
+  },
+  "physics": {
+    "gravity": 3000,
+    "ballRadius": 18
+  },
+  "effects": {
+    "speedUpOnBounce": 1.008
+  },
+  "music": {
+    "melody": "canon-in-d",
+    "instrument": "bell"
+  },
+  "style": {
+    "wallColor": "#9fe8ff",
+    "title": "",
+    "background": "#01060f",
+    "palette": [
+      "#9fe8ff",
+      "#5ec8f5",
+      "#c9f2ff",
+      "#7fd4ff",
+      "#e8fbff"
+    ]
+  }
+}

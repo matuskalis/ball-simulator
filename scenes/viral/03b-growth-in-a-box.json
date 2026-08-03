@@ -1,0 +1,27 @@
+{
+  "name": "03b-growth-in-a-box",
+  "preset": "growth",
+  "seed": 302,
+  "durationSeconds": 20,
+  "launchSpeed": 1000,
+  "physics": {
+    "gravity": 3000,
+    "ballRadius": 10
+  },
+  "effects": {
+    "growToFillAtEnd": true
+  },
+  "music": {
+    "melody": "korobeiniki",
+    "instrument": "square"
+  },
+  "style": {
+    "showCounter": true,
+    "title": "how many bounces to fill it?"
+  },
+  "arena": {
+    "kind": "box",
+    "boxWidth": 900,
+    "boxHeight": 1500
+  }
+}

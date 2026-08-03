@@ -1,0 +1,26 @@
+{
+  "name": "01a-wall-breaker-frantic",
+  "preset": "destruction",
+  "seed": 101,
+  "durationSeconds": 15,
+  "launchSpeed": 1400,
+  "arena": {
+    "radius": 240,
+    "segments": 200
+  },
+  "physics": {
+    "gravity": 4200,
+    "ballRadius": 18
+  },
+  "effects": {
+    "speedUpOnBounce": 1.015
+  },
+  "music": {
+    "melody": "korobeiniki",
+    "instrument": "square"
+  },
+  "style": {
+    "wallColor": "#ff2e88",
+    "title": "every hit breaks the wall"
+  }
+}

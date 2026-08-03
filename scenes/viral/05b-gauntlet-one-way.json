@@ -1,0 +1,27 @@
+{
+  "name": "05b-gauntlet-one-way",
+  "preset": "escape",
+  "seed": 502,
+  "durationSeconds": 20,
+  "arena": {
+    "ringCount": 8,
+    "ringSpacing": 30,
+    "ringGapDegrees": 42,
+    "ringSpeed": 45,
+    "ringAlternate": false
+  },
+  "physics": {
+    "gravity": 2000,
+    "ballRadius": 14
+  },
+  "effects": {
+    "breakWalls": true
+  },
+  "music": {
+    "melody": "fur-elise",
+    "instrument": "piano"
+  },
+  "style": {
+    "title": "find the gap"
+  }
+}

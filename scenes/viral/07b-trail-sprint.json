@@ -1,0 +1,25 @@
+{
+  "name": "07b-trail-sprint",
+  "preset": "trail",
+  "seed": 702,
+  "durationSeconds": 13,
+  "launchSpeed": 1600,
+  "arena": {
+    "radius": 340
+  },
+  "physics": {
+    "gravity": 2400,
+    "ballRadius": 13
+  },
+  "effects": {
+    "trailLength": 75,
+    "growToFillAtEnd": true
+  },
+  "music": {
+    "melody": "canon-in-d",
+    "instrument": "pluck"
+  },
+  "style": {
+    "background": "#03030a"
+  }
+}

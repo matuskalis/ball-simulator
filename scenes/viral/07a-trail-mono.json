@@ -1,0 +1,29 @@
+{
+  "name": "07a-trail-mono",
+  "preset": "trail",
+  "seed": 701,
+  "durationSeconds": 20,
+  "launchSpeed": 1400,
+  "arena": {
+    "radius": 340
+  },
+  "physics": {
+    "gravity": 2400,
+    "ballRadius": 13
+  },
+  "effects": {
+    "trailLength": 75,
+    "growToFillAtEnd": true,
+    "colorCycle": false
+  },
+  "music": {
+    "melody": "canon-in-d",
+    "instrument": "pluck"
+  },
+  "style": {
+    "background": "#000000",
+    "palette": [
+      "#ffffff"
+    ]
+  }
+}

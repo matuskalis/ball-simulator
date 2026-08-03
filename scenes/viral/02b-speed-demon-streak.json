@@ -1,0 +1,34 @@
+{
+  "name": "02b-speed-demon-streak",
+  "preset": "classic",
+  "seed": 202,
+  "durationSeconds": 20,
+  "launchSpeed": 1000,
+  "arena": {
+    "radius": 320
+  },
+  "physics": {
+    "gravity": 3000,
+    "ballRadius": 16,
+    "maxSpeed": 3500
+  },
+  "effects": {
+    "speedUpOnBounce": 1.03,
+    "trailLength": 30
+  },
+  "music": {
+    "melody": "korobeiniki",
+    "instrument": "square"
+  },
+  "style": {
+    "title": "watch it accelerate",
+    "showCounter": true,
+    "palette": [
+      "#ff2e88",
+      "#00f0ff",
+      "#faff00",
+      "#b14aff",
+      "#00ff9d"
+    ]
+  }
+}

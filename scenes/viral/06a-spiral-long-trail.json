@@ -1,0 +1,27 @@
+{
+  "name": "06a-spiral-long-trail",
+  "preset": "spiral",
+  "seed": 601,
+  "durationSeconds": 19,
+  "arena": {
+    "ringCount": 7,
+    "ringSpacing": 44,
+    "ringGapDegrees": 50,
+    "ringSpeed": 30
+  },
+  "effects": {
+    "trailLength": 80,
+    "breakWalls": true
+  },
+  "music": {
+    "melody": "moonlight-sonata",
+    "instrument": "sine"
+  },
+  "style": {
+    "background": "#03040f"
+  },
+  "physics": {
+    "gravity": 1800,
+    "ballRadius": 13
+  }
+}

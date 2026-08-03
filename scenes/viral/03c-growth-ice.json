@@ -1,0 +1,31 @@
+{
+  "name": "03c-growth-ice",
+  "preset": "growth",
+  "seed": 303,
+  "durationSeconds": 25,
+  "launchSpeed": 1000,
+  "physics": {
+    "gravity": 3000,
+    "ballRadius": 10
+  },
+  "effects": {
+    "growToFillAtEnd": true
+  },
+  "music": {
+    "melody": "canon-in-d",
+    "instrument": "bell"
+  },
+  "style": {
+    "showCounter": true,
+    "title": "how many bounces to fill it?",
+    "palette": [
+      "#9fe8ff",
+      "#5ec8f5",
+      "#c9f2ff",
+      "#7fd4ff",
+      "#e8fbff"
+    ],
+    "background": "#01060f",
+    "wallColor": "#9fe8ff"
+  }
+}

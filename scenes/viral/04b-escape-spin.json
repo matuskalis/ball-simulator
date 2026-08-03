@@ -1,8 +1,8 @@
 {
-  "name": "growing-ball-escape",
+  "name": "04b-escape-spin",
   "preset": "escape",
-  "seed": 17,
-  "durationSeconds": 17,
+  "seed": 402,
+  "durationSeconds": 23,
   "physics": {
     "gravity": 2000,
     "ballRadius": 12
@@ -10,8 +10,8 @@
   "arena": {
     "ringCount": 8,
     "ringSpacing": 36,
-    "ringGapDegrees": 44,
-    "ringSpeed": 55
+    "ringGapDegrees": 48,
+    "ringSpeed": 80
   },
   "effects": {
     "growOnBounce": 1.6

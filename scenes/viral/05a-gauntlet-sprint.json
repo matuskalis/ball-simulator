@@ -1,13 +1,13 @@
 {
-  "name": "gauntlet",
+  "name": "05a-gauntlet-sprint",
   "preset": "escape",
-  "seed": 83,
-  "durationSeconds": 25,
+  "seed": 501,
+  "durationSeconds": 12,
   "arena": {
-    "ringCount": 10,
-    "ringSpacing": 30,
-    "ringGapDegrees": 42,
-    "ringSpeed": 55
+    "ringCount": 7,
+    "ringSpacing": 34,
+    "ringGapDegrees": 46,
+    "ringSpeed": 70
   },
   "physics": {
     "gravity": 2000,

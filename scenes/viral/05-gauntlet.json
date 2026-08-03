@@ -1,0 +1,26 @@
+{
+  "name": "05-gauntlet",
+  "preset": "escape",
+  "seed": 83,
+  "durationSeconds": 25,
+  "arena": {
+    "ringCount": 10,
+    "ringSpacing": 30,
+    "ringGapDegrees": 42,
+    "ringSpeed": 55
+  },
+  "physics": {
+    "gravity": 2000,
+    "ballRadius": 14
+  },
+  "effects": {
+    "breakWalls": true
+  },
+  "music": {
+    "melody": "fur-elise",
+    "instrument": "piano"
+  },
+  "style": {
+    "title": "find the gap"
+  }
+}

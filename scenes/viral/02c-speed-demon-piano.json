@@ -1,0 +1,26 @@
+{
+  "name": "02c-speed-demon-piano",
+  "preset": "classic",
+  "seed": 203,
+  "durationSeconds": 20,
+  "launchSpeed": 1000,
+  "arena": {
+    "radius": 360
+  },
+  "physics": {
+    "gravity": 3000,
+    "ballRadius": 16,
+    "maxSpeed": 3500
+  },
+  "effects": {
+    "speedUpOnBounce": 1.02
+  },
+  "music": {
+    "melody": "fur-elise",
+    "instrument": "piano"
+  },
+  "style": {
+    "title": "it only gets faster",
+    "showCounter": true
+  }
+}
