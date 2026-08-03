@@ -1,0 +1,10 @@
+{
+  "name": "spiral-hypnosis",
+  "preset": "spiral",
+  "seed": 63,
+  "durationSeconds": 22,
+  "arena": { "ringSpeed": 18 },
+  "effects": { "trailLength": 40 },
+  "music": { "melody": "moonlight-sonata", "instrument": "sine" },
+  "style": { "background": "#03040f" }
+}

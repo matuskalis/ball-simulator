@@ -37,11 +37,15 @@ interface Ball {
   r: number;
   c: number;
   frozen: boolean;
+  age: number;
 }
 
 const SUBSTEPS = 4;
 /** Contacts slower than this are resting jitter, not a real hit: reflect but do not fire effects or notes. */
 const MIN_BOUNCE_SPEED = 55;
+/** A freshly spawned ball cannot stick to the pile until it has actually flown, otherwise a blocked
+ *  spawn point freezes every new ball on contact and the arena saturates in a single frame. */
+const MIN_STICK_AGE = 0.12;
 const MIN_NOTE_GAP = 0.045;
 const MAX_NOTES = 3000;
 const TWO_PI = Math.PI * 2;
@@ -64,7 +68,7 @@ export function simulate(scene: Scene): SimResult {
 
   const launch = (x: number, y: number, speed: number, c: number): Ball => {
     const angle = rng() * TWO_PI;
-    return { x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, r: physics.ballRadius, c, frozen: false };
+    return { x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, r: physics.ballRadius, c, frozen: false, age: 0 };
   };
 
   const balls: Ball[] = [];
@@ -153,6 +157,7 @@ export function simulate(scene: Scene): SimResult {
     ball.vx = fresh.vx;
     ball.vy = fresh.vy;
     ball.r = physics.ballRadius;
+    ball.age = 0;
   };
 
   const collideOuterCircle = (ball: Ball) => {
@@ -229,7 +234,9 @@ export function simulate(scene: Scene): SimResult {
   };
 
   const collideBalls = () => {
-    for (let i = 0; i < balls.length; i += 1) {
+    const stuck: Ball[] = [];
+    const count = balls.length;
+    for (let i = 0; i < count; i += 1) {
       const a = balls[i];
       for (let j = i + 1; j < balls.length; j += 1) {
         const b = balls[j];
@@ -240,6 +247,11 @@ export function simulate(scene: Scene): SimResult {
         if (Math.abs(dx) > minDist || Math.abs(dy) > minDist) continue;
         const dist = Math.hypot(dx, dy) || 1e-6;
         if (dist >= minDist) continue;
+
+        if (effects.stickOnBounce && a.frozen !== b.frozen) {
+          const lander = a.frozen ? b : a;
+          if (lander.age > MIN_STICK_AGE) stuck.push(lander);
+        }
 
         const nx = dx / dist;
         const ny = dy / dist;
@@ -277,6 +289,15 @@ export function simulate(scene: Scene): SimResult {
         }
       }
     }
+
+    for (const ball of stuck) {
+      if (ball.frozen) continue;
+      ball.frozen = true;
+      ball.vx = 0;
+      ball.vy = 0;
+      spawnFrom(ball);
+      recordNote();
+    }
   };
 
   for (let frame = 0; frame < totalFrames; frame += 1) {
@@ -288,6 +309,7 @@ export function simulate(scene: Scene): SimResult {
       }
       for (const ball of balls) {
         if (ball.frozen) continue;
+        ball.age += dt;
         ball.vy += physics.gravity * dt;
         ball.x += ball.vx * dt;
         ball.y += ball.vy * dt;

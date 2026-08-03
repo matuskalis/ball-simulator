@@ -1,0 +1,11 @@
+{
+  "name": "swarm-chaos",
+  "preset": "swarm",
+  "seed": 71,
+  "durationSeconds": 20,
+  "ballCount": 80,
+  "launchSpeed": 1100,
+  "arena": { "radius": 400 },
+  "physics": { "gravity": 2200, "ballRadius": 14 },
+  "music": { "melody": "chromatic", "instrument": "square" }
+}

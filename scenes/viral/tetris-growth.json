@@ -1,0 +1,11 @@
+{
+  "name": "tetris-growth",
+  "preset": "growth",
+  "seed": 29,
+  "durationSeconds": 25,
+  "launchSpeed": 1000,
+  "physics": { "gravity": 3000, "ballRadius": 10 },
+  "effects": { "growOnBounce": 3.2 },
+  "music": { "melody": "korobeiniki", "instrument": "square" },
+  "style": { "showCounter": true, "title": "how many bounces to fill it?" }
+}

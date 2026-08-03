@@ -1,0 +1,26 @@
+{
+  "name": "wall-breaker",
+  "preset": "destruction",
+  "seed": 26,
+  "durationSeconds": 20,
+  "launchSpeed": 1200,
+  "arena": {
+    "radius": 300,
+    "segments": 140
+  },
+  "physics": {
+    "gravity": 3800,
+    "ballRadius": 18
+  },
+  "effects": {
+    "speedUpOnBounce": 1.008
+  },
+  "music": {
+    "melody": "moonlight-sonata",
+    "instrument": "piano"
+  },
+  "style": {
+    "wallColor": "#ff2e88",
+    "title": "every hit breaks the wall"
+  }
+}
