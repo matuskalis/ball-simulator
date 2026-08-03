@@ -33,6 +33,8 @@ export interface Physics {
 export interface Effects {
   /** px added to the ball radius per bounce. */
   growOnBounce: number;
+  /** Solve `growOnBounce` so the ball fills the arena on its last bounce. Overrides growOnBounce. */
+  growToFillAtEnd: boolean;
   /** velocity multiplier per bounce. 1 = off. */
   speedUpOnBounce: number;
   /** new balls spawned per bounce. 0 = off. */
@@ -121,6 +123,7 @@ export const DEFAULT_SCENE: Scene = {
   },
   effects: {
     growOnBounce: 0,
+    growToFillAtEnd: false,
     speedUpOnBounce: 1,
     spawnOnBounce: 0,
     stickOnBounce: false,

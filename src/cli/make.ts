@@ -4,6 +4,7 @@ import { basename, resolve as resolvePath } from "node:path";
 import { loadMelody } from "../audio/loadMelody";
 import { encodeWav, renderNotes, type NoteEvent } from "../audio/synth";
 import { resolveScene, validateScene } from "../scene/resolve";
+import { solveGrowth } from "../scene/solveGrowth";
 import { simulate } from "../sim/simulate";
 
 const args = process.argv.slice(2);
@@ -19,8 +20,9 @@ const option = (name: string) => {
   return hit ? hit.slice(name.length + 3) : undefined;
 };
 
-const scene = resolveScene(JSON.parse(readFileSync(scenePath, "utf8")));
+const scene = solveGrowth(resolveScene(JSON.parse(readFileSync(scenePath, "utf8"))));
 if (scene.name === "untitled") scene.name = basename(scenePath).replace(/\.json$/, "");
+if (scene.effects.growToFillAtEnd) console.log(`Solved effects.growOnBounce = ${scene.effects.growOnBounce}px per bounce to fill at the end`);
 
 const problems = validateScene(scene);
 if (problems.length > 0) {

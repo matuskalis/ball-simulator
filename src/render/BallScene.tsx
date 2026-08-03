@@ -4,6 +4,8 @@ import type { SceneProps } from "../scene/types";
 import { simulateCached } from "../sim/simulate";
 
 const TWO_PI = Math.PI * 2;
+const BURST_FRAMES = 26;
+const BURST_FRAGMENTS = 18;
 
 const polar = (cx: number, cy: number, r: number, angle: number) => ({
   x: cx + r * Math.cos(angle),
@@ -19,7 +21,7 @@ function arcPath(cx: number, cy: number, r: number, start: number, end: number):
 
 export const BallScene: React.FC<SceneProps> = ({ scene, audioFile }) => {
   const frame = useCurrentFrame();
-  const { frames } = simulateCached(scene);
+  const { frames, bursts } = simulateCached(scene);
   const state = frames[Math.min(frame, frames.length - 1)];
   const cx = scene.width / 2;
   const cy = scene.height / 2;
@@ -77,6 +79,30 @@ export const BallScene: React.FC<SceneProps> = ({ scene, audioFile }) => {
             />
           ) : null,
         )}
+
+        {bursts.map((burst, burstIndex) => {
+          const age = frame - burst.frame;
+          if (age < 0 || age >= BURST_FRAMES) return null;
+          const progress = age / BURST_FRAMES;
+          const radius = burst.radius + progress * 110;
+          return (
+            <g key={`burst-${burstIndex}`} opacity={1 - progress}>
+              {Array.from({ length: BURST_FRAGMENTS }, (_, i) => {
+                const start = (i / BURST_FRAGMENTS) * TWO_PI + progress * 0.3;
+                return (
+                  <path
+                    key={i}
+                    d={arcPath(cx, cy, radius, start, start + (TWO_PI / BURST_FRAGMENTS) * 0.55)}
+                    fill="none"
+                    stroke={color(burst.colorIndex)}
+                    strokeWidth={7 * (1 - progress * 0.6)}
+                    strokeLinecap="round"
+                  />
+                );
+              })}
+            </g>
+          );
+        })}
 
         {showTrails
           ? state.balls.map((ball, ballIndex) => {

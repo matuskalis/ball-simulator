@@ -4,21 +4,9 @@
   "seed": 38,
   "durationSeconds": 20,
   "launchSpeed": 1400,
-  "arena": {
-    "radius": 340
-  },
-  "physics": {
-    "gravity": 2400,
-    "ballRadius": 13
-  },
-  "effects": {
-    "trailLength": 75
-  },
-  "music": {
-    "melody": "canon-in-d",
-    "instrument": "pluck"
-  },
-  "style": {
-    "background": "#03030a"
-  }
+  "arena": { "radius": 340 },
+  "physics": { "gravity": 2400, "ballRadius": 13 },
+  "effects": { "trailLength": 75, "growToFillAtEnd": true },
+  "music": { "melody": "canon-in-d", "instrument": "pluck" },
+  "style": { "background": "#03030a" }
 }

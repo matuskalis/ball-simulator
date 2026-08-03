@@ -23,10 +23,18 @@ export interface FrameState {
   bounces: number;
 }
 
+/** A ring that was just passed through, so the renderer can blow it apart. */
+export interface RingBurst {
+  frame: number;
+  radius: number;
+  colorIndex: number;
+}
+
 export interface SimResult {
   frames: FrameState[];
   /** Time in seconds of every bounce that should trigger a note. */
   bounceSeconds: number[];
+  bursts: RingBurst[];
 }
 
 interface Ball {
@@ -64,7 +72,8 @@ export function simulate(scene: Scene): SimResult {
   const totalFrames = Math.round(scene.durationSeconds * scene.fps);
   const dt = 1 / (scene.fps * SUBSTEPS);
   const gapRad = (arena.ringGapDegrees * Math.PI) / 180;
-  const maxBallRadius = arena.radius * 0.45;
+  /** A growing ball is allowed to fill the arena completely; that moment is the payoff. */
+  const maxBallRadius = (arena.kind === "box" ? Math.min(arena.boxWidth, arena.boxHeight) / 2 : arena.radius) * 0.98;
 
   const launch = (x: number, y: number, speed: number, c: number): Ball => {
     const angle = rng() * TWO_PI;
@@ -96,7 +105,9 @@ export function simulate(scene: Scene): SimResult {
 
   const frames: FrameState[] = [];
   const bounceSeconds: number[] = [];
+  const bursts: RingBurst[] = [];
   let bounceCount = 0;
+  let frameIndex = 0;
   let time = 0;
 
   const recordNote = () => {
@@ -139,7 +150,14 @@ export function simulate(scene: Scene): SimResult {
       ball.vx = (ball.vx / speed) * physics.maxSpeed;
       ball.vy = (ball.vy / speed) * physics.maxSpeed;
     }
-    if (effects.growOnBounce > 0) ball.r = Math.min(maxBallRadius, ball.r + effects.growOnBounce);
+    if (effects.growOnBounce > 0) {
+      const grown = Math.min(maxBallRadius, ball.r + effects.growOnBounce);
+      // The caller already placed the ball flush against the wall using its old radius, so growing
+      // in place buries it and the next substep reads that as a second, phantom bounce.
+      ball.x += nx * (grown - ball.r);
+      ball.y += ny * (grown - ball.r);
+      ball.r = grown;
+    }
     if (effects.colorCycle) ball.c = (ball.c + 1) % paletteSize;
     spawnFrom(ball);
     if (effects.stickOnBounce) {
@@ -209,11 +227,17 @@ export function simulate(scene: Scene): SimResult {
     const angle = Math.atan2(dy, dx);
     const radial = (ball.vx * dx + ball.vy * dy) / dist;
 
-    for (const ring of rings) {
+    for (let ringIndex = 0; ringIndex < rings.length; ringIndex += 1) {
+      const ring = rings[ringIndex];
       if (!ring.alive) continue;
       const inGap = angularDistance(angle, ring.angle) < ring.gap / 2;
       if (inGap) {
-        if (effects.breakWalls && dist - ball.r > ring.radius) ring.alive = false;
+        // Destroy as the ball enters the gap, not once it has fully cleared: the ring keeps rotating,
+        // so by the time the ball is past, the gap has usually moved off and the pass is never recorded.
+        if (effects.breakWalls && dist + ball.r > ring.radius && radial > 0) {
+          ring.alive = false;
+          bursts.push({ frame: frameIndex, radius: ring.radius, colorIndex: ringIndex });
+        }
         continue;
       }
       const nxOut = dx / dist;
@@ -301,6 +325,7 @@ export function simulate(scene: Scene): SimResult {
   };
 
   for (let frame = 0; frame < totalFrames; frame += 1) {
+    frameIndex = frame;
     for (let step = 0; step < SUBSTEPS; step += 1) {
       time += dt;
       for (let i = 0; i < rings.length; i += 1) {
@@ -337,7 +362,7 @@ export function simulate(scene: Scene): SimResult {
     });
   }
 
-  return { frames, bounceSeconds };
+  return { frames, bounceSeconds, bursts };
 }
 
 const cache = new Map<string, SimResult>();

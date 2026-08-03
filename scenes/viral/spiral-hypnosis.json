@@ -2,9 +2,26 @@
   "name": "spiral-hypnosis",
   "preset": "spiral",
   "seed": 63,
-  "durationSeconds": 22,
-  "arena": { "ringSpeed": 18 },
-  "effects": { "trailLength": 40 },
-  "music": { "melody": "moonlight-sonata", "instrument": "sine" },
-  "style": { "background": "#03040f" }
+  "durationSeconds": 23,
+  "arena": {
+    "ringCount": 9,
+    "ringSpacing": 30,
+    "ringGapDegrees": 50,
+    "ringSpeed": 35
+  },
+  "effects": {
+    "trailLength": 40,
+    "breakWalls": true
+  },
+  "music": {
+    "melody": "moonlight-sonata",
+    "instrument": "sine"
+  },
+  "style": {
+    "background": "#03040f"
+  },
+  "physics": {
+    "gravity": 1800,
+    "ballRadius": 13
+  }
 }

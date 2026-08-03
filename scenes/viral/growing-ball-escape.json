@@ -2,10 +2,25 @@
   "name": "growing-ball-escape",
   "preset": "escape",
   "seed": 17,
-  "durationSeconds": 22,
-  "physics": { "gravity": 2000, "ballRadius": 12 },
-  "arena": { "ringCount": 8, "ringSpacing": 36, "ringGapDegrees": 44, "ringSpeed": 55 },
-  "effects": { "growOnBounce": 0.8 },
-  "music": { "melody": "canon-in-d", "instrument": "bell" },
-  "style": { "title": "escape before it grows too big" }
+  "durationSeconds": 17,
+  "physics": {
+    "gravity": 2000,
+    "ballRadius": 12
+  },
+  "arena": {
+    "ringCount": 8,
+    "ringSpacing": 36,
+    "ringGapDegrees": 44,
+    "ringSpeed": 55
+  },
+  "effects": {
+    "growOnBounce": 1.6
+  },
+  "music": {
+    "melody": "canon-in-d",
+    "instrument": "bell"
+  },
+  "style": {
+    "title": "escape before it grows too big"
+  }
 }
