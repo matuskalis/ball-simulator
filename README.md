@@ -1,5 +1,9 @@
 # ball-simulator
 
+![Six seconds of the escape preset: a ball breaking out through rotating rings](docs/demo.gif)
+
+*`scenes/readme-demo.json` rendered with `npm run make`, downscaled to a GIF. The real output is 1080x1920 60fps with a note per bounce.*
+
 Prompt-driven bouncing-ball video generator. Same output category as ballsimulator.com — vertical physics clips for Shorts / Reels / TikTok, one melody note per bounce — except the interface is a coding agent instead of a web UI. You say what you want, your local agent writes the scene config and renders the MP4.
 
 ```

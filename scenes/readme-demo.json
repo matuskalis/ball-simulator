@@ -1,0 +1,13 @@
+{
+  "name": "readme-demo",
+  "preset": "escape",
+  "seed": 11,
+  "durationSeconds": 6,
+  "music": {
+    "melody": "canon-in-d",
+    "instrument": "bell"
+  },
+  "style": {
+    "background": "#04070f"
+  }
+}
