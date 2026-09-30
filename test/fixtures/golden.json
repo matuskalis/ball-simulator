@@ -48,6 +48,13 @@
     "sim": "40cb36807c7d2e76",
     "wav": "5aba0242bc449ae2"
   },
+  "scenes/purple-escape.json": {
+    "frames": 900,
+    "notes": 24,
+    "bounces": 24,
+    "sim": "49c80a3e6f714265",
+    "wav": null
+  },
   "scenes/readme-demo.json": {
     "frames": 360,
     "notes": 15,

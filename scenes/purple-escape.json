@@ -1,0 +1,9 @@
+{
+  "name": "purple-escape",
+  "preset": "escape",
+  "seed": 9,
+  "durationSeconds": 15,
+  "arena": { "ringCount": 6 },
+  "music": { "enabled": false },
+  "style": { "background": "#0b0418", "palette": ["#a259ff", "#d4a5ff", "#6b2fd6"] }
+}
