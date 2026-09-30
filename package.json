@@ -10,7 +10,8 @@
     "modes": "tsx src/cli/modes.ts",
     "dev": "remotion studio",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "golden": "tsx scripts/update-golden.mts"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.0",

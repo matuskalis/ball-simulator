@@ -1,0 +1,240 @@
+{
+  "scenes/accumulation.json": {
+    "frames": 1200,
+    "notes": 42,
+    "bounces": 42,
+    "sim": "1671f44bb14131fb",
+    "wav": "c2a848d173104464"
+  },
+  "scenes/classic-fur-elise.json": {
+    "frames": 1200,
+    "notes": 32,
+    "bounces": 32,
+    "sim": "ebc0472d21e61dc5",
+    "wav": "58bd107d2609e100"
+  },
+  "scenes/destruction.json": {
+    "frames": 1200,
+    "notes": 27,
+    "bounces": 27,
+    "sim": "a493b22dbd648301",
+    "wav": "180dc398e367c348"
+  },
+  "scenes/escape-rings.json": {
+    "frames": 1320,
+    "notes": 50,
+    "bounces": 50,
+    "sim": "05fbb316bcf4333c",
+    "wav": "93f9d31764ae9bc1"
+  },
+  "scenes/growth-tetris.json": {
+    "frames": 1500,
+    "notes": 45,
+    "bounces": 45,
+    "sim": "78d9894c94215314",
+    "wav": "d1f690b2ba35463b"
+  },
+  "scenes/infinite-loop.json": {
+    "frames": 1080,
+    "notes": 374,
+    "bounces": 53036,
+    "sim": "5bf37d0ad581b261",
+    "wav": "011139251112e1f7"
+  },
+  "scenes/pit.json": {
+    "frames": 1200,
+    "notes": 150,
+    "bounces": 214,
+    "sim": "40cb36807c7d2e76",
+    "wav": "5aba0242bc449ae2"
+  },
+  "scenes/readme-demo.json": {
+    "frames": 360,
+    "notes": 15,
+    "bounces": 15,
+    "sim": "5793992779eb7b4c",
+    "wav": "29e056f157eefdc1"
+  },
+  "scenes/spiral.json": {
+    "frames": 1200,
+    "notes": 144,
+    "bounces": 638,
+    "sim": "817f07b6cc1974b4",
+    "wav": "23a011b7149111ad"
+  },
+  "scenes/swarm.json": {
+    "frames": 1200,
+    "notes": 393,
+    "bounces": 3277,
+    "sim": "6c6f92bd09817915",
+    "wav": "a3db6996b7d6f46e"
+  },
+  "scenes/trail.json": {
+    "frames": 1200,
+    "notes": 29,
+    "bounces": 29,
+    "sim": "f378814e5d90e3c4",
+    "wav": "46cbb107fa9a2566"
+  },
+  "scenes/viral/01-wall-breaker.json": {
+    "frames": 1200,
+    "notes": 53,
+    "bounces": 53,
+    "sim": "c2a2e8696b0f35dd",
+    "wav": "8d7fded6a7fbdff1"
+  },
+  "scenes/viral/01a-wall-breaker-frantic.json": {
+    "frames": 900,
+    "notes": 63,
+    "bounces": 63,
+    "sim": "d7f3c0d49c9e3cfc",
+    "wav": "73032764ee89a48f"
+  },
+  "scenes/viral/01c-wall-breaker-ice.json": {
+    "frames": 1200,
+    "notes": 50,
+    "bounces": 50,
+    "sim": "c61d66e01c0646d7",
+    "wav": "fd591eb5f81cc032"
+  },
+  "scenes/viral/02-speed-demon.json": {
+    "frames": 1200,
+    "notes": 107,
+    "bounces": 107,
+    "sim": "32ad937981fe5932",
+    "wav": "d6d189da630ff3d3"
+  },
+  "scenes/viral/02a-speed-demon-tiny.json": {
+    "frames": 900,
+    "notes": 98,
+    "bounces": 98,
+    "sim": "ca9f7ef4db247366",
+    "wav": "f1c7485bc868d48d"
+  },
+  "scenes/viral/02b-speed-demon-streak.json": {
+    "frames": 1200,
+    "notes": 109,
+    "bounces": 109,
+    "sim": "49902504940b8735",
+    "wav": "bd62538df8a22fef"
+  },
+  "scenes/viral/02c-speed-demon-piano.json": {
+    "frames": 1200,
+    "notes": 63,
+    "bounces": 63,
+    "sim": "09756bc702643cd3",
+    "wav": "e7b0eace69989f44"
+  },
+  "scenes/viral/03-tetris-growth.json": {
+    "frames": 1500,
+    "notes": 118,
+    "bounces": 228,
+    "sim": "3301052405733be7",
+    "wav": "35da2bba8c207cf2"
+  },
+  "scenes/viral/03a-tetris-growth-quick.json": {
+    "frames": 900,
+    "notes": 73,
+    "bounces": 152,
+    "sim": "4fb48c8db69d0b5b",
+    "wav": "07a38a5862964a34"
+  },
+  "scenes/viral/03b-growth-in-a-box.json": {
+    "frames": 1200,
+    "notes": 36,
+    "bounces": 49,
+    "sim": "af78e981868196bc",
+    "wav": "ceb327f6c84f6954"
+  },
+  "scenes/viral/03c-growth-ice.json": {
+    "frames": 1500,
+    "notes": 112,
+    "bounces": 211,
+    "sim": "6fb44cd3fef73f0d",
+    "wav": "b335fd1c9f898fef"
+  },
+  "scenes/viral/04-growing-ball-escape.json": {
+    "frames": 1020,
+    "notes": 38,
+    "bounces": 38,
+    "sim": "24267a26cc8ca93a",
+    "wav": "2911c3e13330185f"
+  },
+  "scenes/viral/04b-escape-spin.json": {
+    "frames": 1380,
+    "notes": 63,
+    "bounces": 63,
+    "sim": "6b4e7ae2e80755df",
+    "wav": "64ece131fe04f305"
+  },
+  "scenes/viral/05-gauntlet.json": {
+    "frames": 1500,
+    "notes": 51,
+    "bounces": 51,
+    "sim": "b7d109336115badd",
+    "wav": "4538a435bbe7a6c3"
+  },
+  "scenes/viral/05a-gauntlet-sprint.json": {
+    "frames": 720,
+    "notes": 20,
+    "bounces": 20,
+    "sim": "bd656ac88285c53c",
+    "wav": "0fee1f145b7bac25"
+  },
+  "scenes/viral/05b-gauntlet-one-way.json": {
+    "frames": 1200,
+    "notes": 38,
+    "bounces": 38,
+    "sim": "168c34c82529c765",
+    "wav": "f163bfe156bd2ce6"
+  },
+  "scenes/viral/05c-gauntlet-chiptune.json": {
+    "frames": 720,
+    "notes": 27,
+    "bounces": 27,
+    "sim": "e141fda9148e4901",
+    "wav": "a8e6e58478c7b51e"
+  },
+  "scenes/viral/06-spiral-hypnosis.json": {
+    "frames": 1380,
+    "notes": 38,
+    "bounces": 38,
+    "sim": "043dd571fd4f1a99",
+    "wav": "3056cf5492c1900b"
+  },
+  "scenes/viral/06a-spiral-long-trail.json": {
+    "frames": 1140,
+    "notes": 49,
+    "bounces": 49,
+    "sim": "9a762a321c89349e",
+    "wav": "b68841b12d76d435"
+  },
+  "scenes/viral/06b-spiral-fast-spin.json": {
+    "frames": 720,
+    "notes": 30,
+    "bounces": 30,
+    "sim": "4d22972db82f134e",
+    "wav": "519568187f3de9c3"
+  },
+  "scenes/viral/07-rainbow-trail.json": {
+    "frames": 1200,
+    "notes": 88,
+    "bounces": 104,
+    "sim": "7eca19af03ff18c8",
+    "wav": "c231cb7fa7dcb70c"
+  },
+  "scenes/viral/07a-trail-mono.json": {
+    "frames": 1200,
+    "notes": 90,
+    "bounces": 108,
+    "sim": "caac4aa771f9ad69",
+    "wav": "63416849388b9b1c"
+  },
+  "scenes/viral/07b-trail-sprint.json": {
+    "frames": 780,
+    "notes": 65,
+    "bounces": 68,
+    "sim": "66c4efca4a147664",
+    "wav": "034b9a2bc1f18b2d"
+  }
+}
