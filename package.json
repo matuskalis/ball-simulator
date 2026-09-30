@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "golden": "tsx scripts/update-golden.mts",
-    "parity": "tsx scripts/parity.mts"
+    "parity": "tsx scripts/parity.mts",
+    "probe:trig": "tsx scripts/trig-probe.mts"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.0",
