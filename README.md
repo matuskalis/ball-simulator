@@ -98,7 +98,7 @@ Half the rings are still standing when the video ends, so the agent lowers `aren
 
 `classic` one ball, endless bounce. `growth` ball grows per hit. `infinite-loop` every bounce clones the ball. `accumulation` balls freeze on landing and pile up. `destruction` each hit destroys a wall segment. `escape` rotating rings with gaps, ball escapes ring by ring. `spiral` tight slow rings, corkscrew outward. `trail` long glowing streak. `swarm` a crowd of colliding balls. `pit` rectangular arena.
 
-The sheet shows one frame of one scene per preset, 360x640, captions read from the scene files. There are 35 scene files: 12 in `scenes/` and 23 in `scenes/viral/` (seven numbered scenes, most with variants).
+The sheet shows one frame of one scene per preset, 360x640, captions read from the scene files. There are 35 scene files: 12 in `scenes/` and 23 in `scenes/viral/` (seven numbered scenes, each with variants).
 
 ## How it works
 
@@ -117,7 +117,7 @@ The sheet shows one frame of one scene per preset, 360x640, captions read from t
             ffmpeg inside Remotion  ->  out/x.mp4
 ```
 
-- **Physics.** A fixed step of 1/240 s (4 substeps per frame at 60 fps), semi-implicit Euler, gravity 2600 px/s2, balls launched at 900 px/s in a seeded random direction. A wall puts the ball flush against itself, reflects its velocity and scales it by `restitution` (1 by default). Balls collide with equal masses and a frozen ball acts as a wall.
+- **Physics.** A fixed step of 1/240 s (4 substeps per frame at 60 fps), semi-implicit Euler, gravity 2600 px/s squared, balls launched at 900 px/s in a seeded random direction. A wall puts the ball flush against itself, reflects its velocity and scales it by `restitution` (1 by default). Balls collide with equal masses and a frozen ball acts as a wall.
 - **Which bounces sound.** A contact slower than 55 px/s is reflected with no note and no effect, which is what stops a settled ball from machine-gunning the melody.
 - **Audio.** The n-th audible bounce plays the n-th note of the melody, looping. Pitch is `440 * 2^((note - 69) / 12)`. Five instruments are formulas (sine, square, bell, pluck, piano), each note lasts 0.55 s, and the mix goes through `tanh` into a 44.1 kHz 16-bit WAV. Notes under 45 ms apart merge, so 53,036 bounces in `scenes/infinite-loop.json` become 374 notes.
 - **The picture.** One SVG per frame, drawn from the same simulation.
@@ -126,7 +126,7 @@ The sheet shows one frame of one scene per preset, 360x640, captions read from t
 
 ## Determinism
 
-Same seed and scene, same video. Measured, on one machine (M1 Pro, macOS 27, Node 22 and 24, Chrome Headless Shell 149):
+Same seed and scene, same video. Measured on an M1 Pro (macOS 27, Node 22 and 24, Chrome Headless Shell 149) and, where a row says so, on GitHub's Ubuntu 24.04 runners:
 
 | Check | Result |
 | --- | --- |
@@ -137,7 +137,7 @@ Same seed and scene, same video. Measured, on one machine (M1 Pro, macOS 27, Nod
 | The same quarter-size preview rendered on macOS arm64 and on Ubuntu x86_64 | not identical: 0 of 60 decoded frames match, average PSNR 44.8 dB. Each machine reproduces its own bytes. |
 | Audio decoded from the MP4 against the WAV | not identical: AAC is lossy and 42.7 ms late, the same 42.7 ms throughout |
 
-The last two rows have a history. Node and Chrome disagree by one bit on about 3 percent of `Math.cos` and `Math.sin` inputs, and two of the 34 scenes then in the repository (`swarm`, `infinite-loop`) drew a picture whose bounces no longer matched the notes after a second or two. `src/sim/trig.ts` now does the two calls in exact integer arithmetic, `npm run parity` keeps the two engines honest, and `test/fixtures/golden.json` pins every scene's output. [docs/determinism.md](docs/determinism.md) has the numbers, the commands and what is not claimed.
+The Node-against-Chromium row has a history. Node and Chrome disagree by one bit on about 3 percent of `Math.cos` and `Math.sin` inputs, and two of the 34 scenes then in the repository (`swarm`, `infinite-loop`) drew a picture whose bounces no longer matched the notes after a second or two. `src/sim/trig.ts` now does the two calls in exact integer arithmetic, `npm run parity` keeps the two engines honest, and `test/fixtures/golden.json` pins every scene's output. [docs/determinism.md](docs/determinism.md) has the numbers, the commands and what is not claimed.
 
 ## Design decisions
 
@@ -150,7 +150,7 @@ The last two rows have a history. Node and Chrome disagree by one bit on about 3
 ## Status and limits
 
 - Checked: macOS on Apple silicon and Ubuntu 24.04 on x86_64 (CI), Node 22 and 24, Remotion 4.0.503. CI runs typecheck and tests on Node 22 and 24, plus a short render and the parity check.
-- The natural-language step is not tested: no model is called by any test or demo in this repository. The scene files in `scenes/` and the walk-through above were written by hand.
+- The natural-language step is not tested: no model is called by any test or demo in this repository, and the walk-through above was written by hand.
 - The audio in an MP4 sounds 43 to 59 ms after the contact appears: 42.7 ms of AAC delay added by Remotion's encoder, plus up to one frame because frame n shows the state at time (n + 1) / 60. It is constant, not drift, and this repository does not correct it.
 - Only wall contacts and sticking balls make notes. Ball-to-ball hits are silent.
 - `restitution` below 1 slows the whole velocity at a wall, the sliding part included.
@@ -162,8 +162,9 @@ The last two rows have a history. Node and Chrome disagree by one bit on about 3
 
 ```bash
 npm run typecheck    # tsc --noEmit
-npm test             # vitest: 270 tests in 12 files, 10 to 25 s
+npm test             # vitest: 270 tests in 12 files, about 10 s (6 s on CI)
 npm run parity       # Node against headless Chromium on every scene, about a minute
+npm run probe:trig   # how often Math.cos and Math.sin differ between Node and Chromium
 npm run golden       # rewrite test/fixtures/golden.json after an intended physics or audio change
 ```
 
