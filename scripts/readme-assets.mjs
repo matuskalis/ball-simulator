@@ -74,8 +74,12 @@ const still = (scene, frame, dir) => {
 
 const meta = (scene) => JSON.parse(readFileSync(join(ROOT, scene), "utf8"));
 
-const text = (value, size, color, y) =>
-  `drawtext=fontfile=${FONT}:text='${value}':fontsize=${size}:fontcolor=${color}:x=(w-text_w)/2:y=${y}`;
+/** Centred text whose baseline sits at `baseline`, whatever glyphs it has (plain y would follow the tallest one). */
+const text = (value, size, color, baseline) =>
+  `drawtext=fontfile=${FONT}:text='${value}':fontsize=${size}:fontcolor=${color}:x=(w-text_w)/2:y=${baseline}-max_glyph_a`;
+
+/** The largest size up to `size` at which `value` fits in `width` px of a monospace font (advance 0.602 em). */
+const fit = (value, size, width) => Math.min(size, Math.floor(width / (value.length * 0.602)));
 
 function hero() {
   const inputs = [];
@@ -88,7 +92,7 @@ function hero() {
     inputs.push("-framerate", "15", "-pattern_type", "glob", "-i", join(dir, "element-*.png"));
     chains.push(
       `[${index}:v]scale=200:356:flags=lanczos,pad=206:396:3:0:color=${BACKGROUND},` +
-        `${text(name, 11, "white", 362)},${text(`${preset}  seed ${seed}`, 10, "0x8e8ea0", 378)}[p${index}]`,
+        `${text(name, 11, "white", 371)},${text(name === preset ? `seed ${seed}` : `${preset}  seed ${seed}`, 10, "0x8e8ea0", 386)}[p${index}]`,
     );
   });
   const stacked = HERO.map((_, index) => `[p${index}]`).join("");
@@ -104,10 +108,11 @@ function sheet() {
   SHEET.forEach(({ scene, frame }, index) => {
     const png = still(scene, frame, join(WORK, `sheet-${index}`));
     const { name, preset, seed } = meta(scene);
+    const detail = name === preset ? `seed ${seed}` : `${name}  seed ${seed}`;
     inputs.push("-i", png);
     chains.push(
       `[${index}:v]pad=372:730:6:0:color=${SHEET_BACKGROUND},` +
-        `${text(preset, 28, "white", 652)},${text(name === preset ? `seed ${seed}` : `${name}  seed ${seed}`, 21, "0x8e8ea0", 692)}[c${index}]`,
+        `${text(preset, fit(preset, 28, 340), "white", 676)},${text(detail, fit(detail, 21, 340), "0x8e8ea0", 710)}[c${index}]`,
     );
   });
   const perRow = SHEET.length / 2;
