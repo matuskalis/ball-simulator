@@ -3,3 +3,9 @@ out/
 public/*.wav
 .DS_Store
 *.log
+.env
+.env.*
+!.env.example
+CLAUDE.local.md
+coverage/
+*.tsbuildinfo

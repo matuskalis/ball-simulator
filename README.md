@@ -1,38 +1,61 @@
 # ball-simulator
 
-![Six seconds of the escape preset: a ball breaking out through rotating rings](docs/demo.gif)
+![Four real renders side by side: a ball growing while it escapes rotating rings, a ball growing until it fills its circle, one ball turning into 260, and a ball dragging a long trail](docs/hero.gif)
 
-*`scenes/readme-demo.json` rendered with `npm run make`, downscaled to a GIF. The real output is 1080x1920 60fps with a note per bounce.*
+Four real renders from `npm run make`, six seconds each, at a third of the real size and 15 fps. From the left: `04-growing-ball-escape` (escape, seed 17), `03-tetris-growth` (growth, seed 29), `infinite-loop` (infinite-loop, seed 5), `07-rainbow-trail` (trail, seed 38). The GIF is silent; [`docs/demo-with-sound.mp4`](docs/demo-with-sound.mp4) is a 6 second clip with the notes.
 
-Prompt-driven bouncing-ball video generator. Same output category as ballsimulator.com — vertical physics clips for Shorts / Reels / TikTok, one melody note per bounce — except the interface is a coding agent instead of a web UI. You say what you want, your local agent writes the scene config and renders the MP4.
+Describe a bouncing-ball physics video in plain language. A coding agent turns it into a small JSON scene, a deterministic simulation plays the scene, and Remotion renders a vertical 1080x1920 MP4 with one melody note on every bounce.
 
+```text
+you:     "ball escaping rotating rings, dark purple, no music, 15s"
+agent:   writes scenes/purple-escape.json, runs npm run validate, then npm run make
+result:  out/purple-escape.mp4   1080x1920, 60 fps, 15 s, 4.1 MB
 ```
-you: "ball bouncing in a circle that grows every hit, tetris music, 8-bit, 30 seconds"
-agent: writes scenes/growing-ball-tetris.json, validates, renders out/growing-ball-tetris.mp4
-```
 
-## Setup
+The engine takes no natural language. The agent is the only interpreter, [AGENTS.md](AGENTS.md) is the contract it works under, and `validate` checks what it wrote before anything renders. Nothing in this repository calls a model or needs a key: a scene is plain JSON you can write yourself.
+
+## Quickstart
+
+Needs Node 22 or newer (tested on 22.22 and 24.5).
 
 ```bash
-npm install
+git clone https://github.com/matuskalis/ball-simulator.git
+cd ball-simulator
+npm ci
+npm run make -- scenes/readme-demo.json
 ```
 
-Needs Node 18+. Remotion pulls its own Chromium on first render.
-
-## Use it with an agent
-
-Open the repo in Claude Code, Cursor, or any agent that reads `AGENTS.md`, and describe the video. The agent contract lives in [AGENTS.md](AGENTS.md): prompt vocabulary, presets, full field reference, worked examples, and the rule that a video request is always a config change and never a `src/` edit.
-
-## Use it by hand
+That writes `out/readme-demo.mp4`: 6 seconds, 1080x1920, 60 fps, H.264 and AAC, 2.9 MB. The first render also downloads Chrome Headless Shell (93.5 MB) once. On the heavily loaded laptop this was written on, the first render took 66 s and 144 s in two fresh checkouts, and later renders of the same clip 16 to 22 s.
 
 ```bash
-npm run modes                                   # presets, melodies, instruments, default scene
-npm run validate -- scenes/escape-rings.json    # bounce/note counts, catches unrenderable scenes
-npm run make -- scenes/escape-rings.json        # -> out/escape-rings.mp4
-npm run dev                                     # Remotion studio, live preview
+npm run modes                                      # presets, melodies, instruments, the default scene
+npm run validate -- scenes/escape-rings.json       # bounce and note counts in about a second
+npm run make -- scenes/escape-rings.json --scale=0.25 --frames=0-299 --out=out/preview.mp4   # first 5 s, quarter size
+npm run dev                                        # Remotion Studio, live preview
 ```
 
-A scene file is a preset plus the fields you want to override:
+`make` hands every flag it does not use to `remotion render`, so `--scale`, `--frames` and `--concurrency` all work.
+
+## What the agent does
+
+[AGENTS.md](AGENTS.md) tells the agent to pick the nearest of ten presets, override only what the user mentioned, write `scenes/<slug>.json`, run `validate` and fix what it says, then run `make`. It never edits `src/` to satisfy a video request. The file also holds the vocabulary that maps what people say onto fields ("8-bit" is `music.instrument: "square"`), the field list, and worked examples.
+
+A scene is a preset plus overrides: 44 fields, all optional except `preset`.
+
+| Group | Fields |
+| --- | --- |
+| top level | name, preset, seed, fps, width, height, durationSeconds, ballCount, launchSpeed |
+| `arena` | kind (circle, rings, box), radius, segments, boxWidth, boxHeight, ringCount, ringSpacing, ringGapDegrees, ringSpeed, ringAlternate |
+| `physics` | gravity, restitution, ballRadius, maxSpeed, ballCollisions |
+| `effects` | growOnBounce, growToFillAtEnd, speedUpOnBounce, spawnOnBounce, stickOnBounce, breakWalls, trailLength, colorCycle, maxBalls |
+| `music` | enabled, melody, instrument, volume, noteSeconds |
+| `style` | background, palette, wallColor, glow, showCounter, title |
+
+`validate` rejects what the engine would silently ignore: `"phyiscs"` is reported as `unknown field "phyiscs", did you mean "physics"?`, a string where a number belongs is named, and so is an instrument that does not exist.
+
+### One prompt, start to finish
+
+The prompt is "ball escaping rotating rings, dark purple, no music, 15s". The JSON below is what the contract prescribes for it, written out by hand here; every output is the real thing.
 
 ```json
 {
@@ -40,27 +63,128 @@ A scene file is a preset plus the fields you want to override:
   "preset": "escape",
   "seed": 9,
   "durationSeconds": 15,
-  "music": { "melody": "canon-in-d", "instrument": "bell" },
+  "music": { "enabled": false },
   "style": { "background": "#0b0418", "palette": ["#a259ff", "#d4a5ff", "#6b2fd6"] }
 }
 ```
 
-## Presets
+Saved to a file, `validate` says:
+
+```text
+VALID
+  preset        escape
+  duration      15s @ 60fps (900 frames, 1080x1920)
+  arena         rings radius 430
+  bounces       35 total, 35 audible notes
+  balls         1 at start, 1 at the end
+  rings         5/10 destroyed, last one at 14.7s
+  NOTE: the ball never cleared every ring. Widen arena.ringGapDegrees, lower arena.ringCount, or extend durationSeconds.
+```
+
+Half the rings are still standing when the video ends, so the agent lowers `arena.ringCount` to 6 and validates again. That version is `scenes/purple-escape.json`:
+
+```text
+  bounces       24 total, 24 audible notes
+  rings         6/6 destroyed, last one at 12.1s
+```
+
+`npm run make -- scenes/purple-escape.json` simulates, then renders `out/purple-escape.mp4` (4.1 MB). This is its frame 420, 7.0 s in, rendered at 360x640:
+
+![Frame 420 of scenes/purple-escape.json: a violet ball inside four remaining violet rings on a dark purple background](docs/example-frame.png)
+
+## The ten presets
+
+![One real frame from each of the ten presets, captioned with the preset, the scene file and its seed](docs/presets.png)
 
 `classic` one ball, endless bounce. `growth` ball grows per hit. `infinite-loop` every bounce clones the ball. `accumulation` balls freeze on landing and pile up. `destruction` each hit destroys a wall segment. `escape` rotating rings with gaps, ball escapes ring by ring. `spiral` tight slow rings, corkscrew outward. `trail` long glowing streak. `swarm` a crowd of colliding balls. `pit` rectangular arena.
 
+The sheet shows one frame of one scene per preset, 360x640, captions read from the scene files. There are 35 scene files: 12 in `scenes/` and 23 in `scenes/viral/` (seven numbered scenes, each with variants).
+
 ## How it works
 
-- `src/sim/simulate.ts` — deterministic fixed-timestep physics, 4 substeps per frame, seeded PRNG. Same seed and scene always give the same video, which is what keeps audio and video in sync.
-- `src/audio/synth.ts` — the CLI runs the simulation first, gets the exact bounce timestamps, and synthesises a WAV where note *n* of the melody lands on bounce *n*. No beat detection, no drift.
-- `src/render/BallScene.tsx` — Remotion composition. It re-runs the same simulation from the scene props and draws frame *n*, so the studio preview and the render agree.
+```text
+ scenes/x.json
+      |  resolveScene (defaults, preset, file) and validateScene
+      v
+   make ---------------------------------+
+      |                                  |
+      v                                  v
+ Node: simulate(scene)              Chromium: simulate(scene) again
+ bounce times -> notes -> WAV       frame n -> SVG -> image
+      |                                  |
+      +----------------+-----------------+
+                       v
+            ffmpeg inside Remotion  ->  out/x.mp4
+```
 
-Contacts slower than 55 px/s are treated as resting jitter: the ball still bounces off, but no note and no effect fires. That is what stops a settled ball from machine-gunning the melody.
+- **Physics.** A fixed step of 1/240 s (4 substeps per frame at 60 fps), semi-implicit Euler, gravity 2600 px/s squared, balls launched at 900 px/s in a seeded random direction. A wall puts the ball flush against itself, reflects its velocity and scales it by `restitution` (1 by default). Balls collide with equal masses and a frozen ball acts as a wall.
+- **Which bounces sound.** A contact slower than 55 px/s is reflected with no note and no effect, which is what stops a settled ball from machine-gunning the melody.
+- **Audio.** The n-th audible bounce plays the n-th note of the melody, looping. Pitch is `440 * 2^((note - 69) / 12)`. Five instruments are formulas (sine, square, bell, pluck, piano), each note lasts 0.55 s, and the mix goes through `tanh` into a 44.1 kHz 16-bit WAV. Notes under 45 ms apart merge, so 53,036 bounces in `scenes/infinite-loop.json` become 374 notes.
+- **The picture.** One SVG per frame, drawn from the same simulation.
 
-## Render speed
+[docs/engine.md](docs/engine.md) has every constant, the collision math, the instrument formulas and the frame timing.
 
-A 6s 1080x1920 60fps clip renders in about 7 seconds on an M-series laptop, so a 20s video is well under a minute. A 260-ball scene is roughly 1.5x that.
+## Determinism
 
-## Audio and licensing
+Same seed and scene, same video. Measured on an M1 Pro (macOS 27, Node 22 and 24, Chrome Headless Shell 149) and, where a row says so, on GitHub's Ubuntu 24.04 runners:
 
-Built-in melodies are public-domain (Für Elise, Ode to Joy, Korobeiniki, Canon in D, and similar) or plain scales. You can also pass an array of MIDI note numbers or a path to your own `.mid` file. Do not ship copyrighted melodies transcribed as note arrays.
+| Check | Result |
+| --- | --- |
+| The same scene rendered three times at 1080x1920 (Node 24 with 5 and with 2 workers, Node 22) | MP4 and WAV byte-identical |
+| 60 PNG frames, a range render against a full render, 2 against 5 workers | 60 of 60 byte-identical |
+| Simulation hash and WAV hash, 35 scenes: Node 22 against Node 24, and macOS arm64 against Ubuntu x86_64 (CI) | identical |
+| Simulation hash, the Chromium that draws the frames against the Node hash pinned in `golden.json`, 35 scenes, on macOS and on Ubuntu | identical |
+| The same quarter-size preview rendered on macOS arm64 and on Ubuntu x86_64 | not identical: 0 of 60 decoded frames match, average PSNR 44.8 dB. Each machine reproduces its own bytes. |
+| Audio decoded from the MP4 against the WAV | not identical: AAC is lossy and 42.7 ms late, the same 42.7 ms throughout |
+
+The Node-against-Chromium row has a history. Node and Chrome disagree by one bit on about 3 percent of `Math.cos` and `Math.sin` inputs, and two of the 34 scenes then in the repository (`swarm`, `infinite-loop`) drew a picture whose bounces no longer matched the notes after a second or two. `src/sim/trig.ts` now does the two calls in exact integer arithmetic, `npm run parity` checks Chromium against the Node hashes that `test/fixtures/golden.json` pins for every scene. Renders of `swarm` and `infinite-loop` made before this change have different note times (the pictures are the same), so they will not reproduce. The exact trig costs about 3 microseconds per call. Simulating `infinite-loop` now takes about 1.6 s against 0.8 s before, because the pair collision was split into its own tested function, not because of the trig. [docs/determinism.md](docs/determinism.md) has the numbers, the commands and what is not claimed.
+
+## Design decisions
+
+**The agent is the parser, the engine is not.** Everything a user can ask for is a config change, so the engine stays small and testable and the contract fits in one file. The cost is that a video is only as good as the agent's choices. `validate` catches typos, wrong types and an unfinished escape, but it cannot tell a dull scene from a good one; a quarter-size preview can, which is why `make` passes `--scale` and `--frames` through.
+
+**Simulate twice instead of storing frames.** Node simulates to get the note times, and each Chromium tab simulates again to draw, so the Studio preview and the render agree without a frame cache and every render worker is independent. The cost is that the two runs must agree to the last bit (they did not, see above) and that the work repeats: `scenes/infinite-loop.json` took between 1.7 s and 15 s to simulate here, depending on how busy the laptop was, once in Node and once per render worker.
+
+**Notes are synthesised, not sampled.** An instrument is a formula, so the WAV is a pure function of the bounce times and nothing needs to be shipped. The cost is five plain timbres.
+
+## Status and limits
+
+- Checked: macOS on Apple silicon and Ubuntu 24.04 on x86_64 (CI), Node 22 and 24, Remotion 4.0.503. CI runs typecheck and tests on Node 22 and 24, plus a short render and the parity check.
+- The natural-language step is not tested: no model is called by any test or demo in this repository, and the walk-through above was written by hand.
+- The audio in an MP4 sounds 43 to 59 ms after the contact appears: 42.7 ms of AAC delay added by Remotion's encoder, plus up to one frame because frame n shows the state at time (n + 1) / 60. It is constant, not drift, and this repository does not correct it.
+- Only wall contacts and sticking balls make notes. Ball-to-ball hits are silent.
+- `restitution` below 1 slows the whole velocity at a wall, the sliding part included.
+- Ball collisions compare every pair, so cost grows with the square of the ball count. 260 balls is comfortable; thousands would not be.
+- A scene plays at most 3000 notes, and `validate` flags scenes over 180 s.
+- Heavy scenes make big files: the 18 s, 260-ball `infinite-loop` renders to 22 MB.
+
+## Tests and CI
+
+```bash
+npm run typecheck    # tsc --noEmit
+npm test             # vitest: 273 tests in 12 files, 6 to 10 s
+npm run parity       # Chromium's hash against the pinned Node hash, every scene, about a minute
+npm run probe:trig   # how often Math.cos and Math.sin differ between Node and Chromium
+npm run golden       # rewrite test/fixtures/golden.json after an intended physics or audio change
+```
+
+The tests cover the physics step against the closed form of the integrator, wall bounces and note times, restitution and the resting threshold, every effect, ring destruction, ball-to-ball collisions, the seeded generator, exact cos and sin against `bc`, note assignment, pitch, the WAV header, the MIDI reader, scene resolution and validation, the CLIs, every JSON example in these docs, and the golden output of all 35 scenes. Eleven deliberate mutations of the physics (substep count, thresholds, restitution, impulse, ring direction and others) each fail at least one test.
+
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request, on `ubuntu-24.04`: typecheck and tests on Node 22 and 24, and a job that renders one second of `scenes/readme-demo.json` at quarter size (kept as an artifact) and runs `npm run parity`. A run takes about a minute.
+
+## Layout
+
+```text
+AGENTS.md        the agent contract (CLAUDE.md, .cursorrules and .claude/skills point here)
+scenes/          35 scene files
+src/scene/       types and defaults, presets, resolve and validate, growth solver
+src/sim/         simulate, collide, trig, rng
+src/audio/       melodies, MIDI reader, synth and WAV
+src/render/      the Remotion composition
+src/cli/         make, validate, modes
+test/            vitest suites, fixtures, helpers
+scripts/         parity and trig probe (need Chromium), golden update, README media
+docs/            engine notes, determinism notes, and the pictures above
+```
+
+The pictures and the sound clip come from real renders: `npm run docs:assets` regenerates them with `make` and ffmpeg (a few minutes, `scripts/readme-assets.mjs`).

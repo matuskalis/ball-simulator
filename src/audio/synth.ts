@@ -2,7 +2,8 @@ import type { Instrument } from "../scene/types";
 
 export const SAMPLE_RATE = 44100;
 
-const frequency = (midiNote: number) => 440 * 2 ** ((midiNote - 69) / 12);
+/** Equal temperament, A4 (MIDI 69) = 440 Hz. */
+export const frequency = (midiNote: number) => 440 * 2 ** ((midiNote - 69) / 12);
 
 function sample(instrument: Instrument, phase: number, t: number, f: number): number {
   switch (instrument) {
@@ -26,6 +27,10 @@ export interface NoteEvent {
   seconds: number;
   midiNote: number;
 }
+
+/** Note n of the melody plays on the n-th audible bounce, and the melody loops. */
+export const assignNotes = (bounceSeconds: number[], melody: number[]): NoteEvent[] =>
+  bounceSeconds.map((seconds, index) => ({ seconds, midiNote: melody[index % melody.length] }));
 
 /** Mixes one note per event into a mono buffer. Length is padded to `totalSeconds`. */
 export function renderNotes(
