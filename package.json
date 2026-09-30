@@ -13,6 +13,7 @@
     "test": "vitest run",
     "golden": "tsx scripts/update-golden.mts",
     "parity": "tsx scripts/parity.mts",
+    "docs:assets": "node scripts/readme-assets.mjs",
     "probe:trig": "tsx scripts/trig-probe.mts"
   },
   "dependencies": {
