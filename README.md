@@ -162,7 +162,7 @@ The Node-against-Chromium row has a history. Node and Chrome disagree by one bit
 
 ```bash
 npm run typecheck    # tsc --noEmit
-npm test             # vitest: 270 tests in 12 files, about 10 s (6 s on CI)
+npm test             # vitest: 273 tests in 12 files, 6 to 10 s
 npm run parity       # Node against headless Chromium on every scene, about a minute
 npm run probe:trig   # how often Math.cos and Math.sin differ between Node and Chromium
 npm run golden       # rewrite test/fixtures/golden.json after an intended physics or audio change
