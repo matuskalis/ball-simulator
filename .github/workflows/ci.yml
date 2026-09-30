@@ -50,5 +50,6 @@ jobs:
         run: |
           npm run make -- scenes/readme-demo.json --scale=0.25 --frames=0-59 --out=out/ci-preview.mp4
           test "$(wc -c < out/ci-preview.mp4)" -gt 10000
+          md5sum out/ci-preview.mp4
       - name: Same simulation in Node and in the Chromium that renders the frames
         run: npm run parity
