@@ -14,8 +14,9 @@ Everything below was measured on 30 Sep 2026 on one machine: MacBook Pro 16" M1 
 | `scenes/readme-demo.json` rendered three times at 1080x1920: Node 24 with 5 render workers, Node 24 with 2, Node 22 with 2. The MP4 | byte-identical, md5 `4459c552f450b5328e82542bcfc4b1d6` |
 | The same three runs. The WAV | byte-identical, md5 `1ffb3531d42e1401a0ba9cdc7adfaa21` |
 | Frames 0 to 59 as PNG at 360x640: a range rendered with 2 workers, the same with 5, and the same frames taken from a full 0 to 359 render (3 workers) | 60 of 60 byte-identical across all three |
-| SHA-256 of the whole simulation result (every frame, note time and ring burst) and of the WAV, Node 22 against Node 24, 35 scenes | identical (the record in `test/fixtures/golden.json`) |
-| The same simulation hash, Node 24 against headless Chromium, 35 scenes | identical (`npm run parity`) |
+| SHA-256 of the whole simulation result (every frame, note time and ring burst) and of the WAV, 35 scenes: Node 22 against Node 24 on macOS arm64, and both against Ubuntu 24.04 x86_64 in CI | identical (the record in `test/fixtures/golden.json`, written on macOS and passing on Linux) |
+| The same simulation hash, Node against headless Chromium 149, 35 scenes, on macOS arm64 and on Ubuntu x86_64 | identical (`npm run parity`, also a CI job) |
+| `scenes/readme-demo.json` at quarter size, frames 0 to 59, rendered on macOS arm64 and on Ubuntu x86_64 | **not** identical: the MP4s differ (166,458 against 165,984 bytes), 0 of 60 decoded frames match, average PSNR 44.8 dB (minimum 41.9). Two CI runs produced the same Linux bytes (md5 `d62fb58076570042ef5102635d2923f3`), as every macOS run produced the same macOS bytes |
 | Audio decoded from the MP4 against the WAV | **not** identical: AAC is lossy, the normalised correlation is 0.995, and the MP4 audio is 42.7 ms late |
 
 The 42.7 ms is constant: 42.68 ms in each of the first, middle and last two seconds, with ffmpeg and with CoreAudio (`afconvert`) as the decoder. It is 2048 samples at 48 kHz, two AAC frames, added by the encoder inside Remotion; the MP4 has no edit list to cancel it. It is a fixed offset, not drift. See [engine.md](engine.md#how-the-file-lines-up).
@@ -58,7 +59,8 @@ npm run make -- scenes/readme-demo.json --out=out/b.mp4 && md5 -r out/b.mp4 publ
 
 ## What is not claimed
 
-- **Other machines.** Nothing above was run on another CPU or operating system by hand. CI runs the golden test on Ubuntu with Node 22 and 24; the workflow is `.github/workflows/ci.yml`.
+- **Identical pixels across machines.** The simulation and the WAV are identical on macOS arm64 and Ubuntu x86_64; the rendered pixels are not (the rasteriser and the JPEG and H.264 encoders differ), so an MP4 is reproducible on one machine, not across them.
+- **Other machines.** Only those two were checked: an M1 Pro running macOS 27, and GitHub's `ubuntu-24.04` x86_64 runners (`.github/workflows/ci.yml`).
 - **Other engines.** The Studio preview in Safari or Firefox uses their own `atan2` and `hypot`; only Chromium was checked.
 - **Other versions.** A different Remotion, which brings a different Chrome, could change `hypot` or `atan2`. `npm run parity` is the check to run after an upgrade.
 - **Seeds.** `0`, `1`, fractions such as `1.9` and `4294967297` all give the stream of seed 1, because the seed is truncated to an unsigned 32-bit integer.

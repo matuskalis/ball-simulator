@@ -132,8 +132,9 @@ Same seed and scene, same video. Measured, on one machine (M1 Pro, macOS 27, Nod
 | --- | --- |
 | The same scene rendered three times at 1080x1920 (Node 24 with 5 and with 2 workers, Node 22) | MP4 and WAV byte-identical |
 | 60 PNG frames, a range render against a full render, 2 against 5 workers | 60 of 60 byte-identical |
-| Simulation hash, Node 22 against Node 24, 35 scenes | identical |
-| Simulation hash, Node against the Chromium that draws the frames, 35 scenes | identical |
+| Simulation hash and WAV hash, 35 scenes: Node 22 against Node 24, and macOS arm64 against Ubuntu x86_64 (CI) | identical |
+| Simulation hash, Node against the Chromium that draws the frames, 35 scenes, on macOS and on Ubuntu | identical |
+| The same quarter-size preview rendered on macOS arm64 and on Ubuntu x86_64 | not identical: 0 of 60 decoded frames match, average PSNR 44.8 dB. Each machine reproduces its own bytes. |
 | Audio decoded from the MP4 against the WAV | not identical: AAC is lossy and 42.7 ms late, the same 42.7 ms throughout |
 
 The last two rows have a history. Node and Chrome disagree by one bit on about 3 percent of `Math.cos` and `Math.sin` inputs, and two of the 34 scenes then in the repository (`swarm`, `infinite-loop`) drew a picture whose bounces no longer matched the notes after a second or two. `src/sim/trig.ts` now does the two calls in exact integer arithmetic, `npm run parity` keeps the two engines honest, and `test/fixtures/golden.json` pins every scene's output. [docs/determinism.md](docs/determinism.md) has the numbers, the commands and what is not claimed.
@@ -148,7 +149,7 @@ The last two rows have a history. Node and Chrome disagree by one bit on about 3
 
 ## Status and limits
 
-- Checked here: macOS on Apple silicon, Node 22 and 24, Remotion 4.0.503. CI runs typecheck and tests on Ubuntu with Node 22 and 24, plus a short render and the parity check.
+- Checked: macOS on Apple silicon and Ubuntu 24.04 on x86_64 (CI), Node 22 and 24, Remotion 4.0.503. CI runs typecheck and tests on Node 22 and 24, plus a short render and the parity check.
 - The natural-language step is not tested: no model is called by any test or demo in this repository. The scene files in `scenes/` and the walk-through above were written by hand.
 - The audio in an MP4 sounds 43 to 59 ms after the contact appears: 42.7 ms of AAC delay added by Remotion's encoder, plus up to one frame because frame n shows the state at time (n + 1) / 60. It is constant, not drift, and this repository does not correct it.
 - Only wall contacts and sticking balls make notes. Ball-to-ball hits are silent.
@@ -168,7 +169,7 @@ npm run golden       # rewrite test/fixtures/golden.json after an intended physi
 
 The tests cover the physics step against the closed form of the integrator, wall bounces and note times, restitution and the resting threshold, every effect, ring destruction, ball-to-ball collisions, the seeded generator, exact cos and sin against `bc`, note assignment, pitch, the WAV header, the MIDI reader, scene resolution and validation, the CLIs, every JSON example in these docs, and the golden output of all 35 scenes. Eleven deliberate mutations of the physics (substep count, thresholds, restitution, impulse, ring direction and others) each fail at least one test.
 
-`.github/workflows/ci.yml` runs on every push to `main` and every pull request: typecheck and tests on Node 22 and 24, and a job that renders one second of `scenes/readme-demo.json` at quarter size and runs `npm run parity`.
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request, on `ubuntu-24.04`: typecheck and tests on Node 22 and 24, and a job that renders one second of `scenes/readme-demo.json` at quarter size (kept as an artifact) and runs `npm run parity`. A run takes about a minute.
 
 ## Layout
 
