@@ -4,7 +4,7 @@ The numbers below are the ones in the code. File and function names are given so
 
 ## One scene, four stages
 
-```
+```text
  scenes/x.json
       |  resolveScene: defaults, then the preset, then the file     (src/scene/resolve.ts)
       |  validateScene: unknown fields, types, ranges                (same file)
@@ -46,14 +46,14 @@ Frame `f` of the output stores the state after substep `4 * (f + 1)`, that is at
 
 A wall contact places the ball flush against the wall and reflects its velocity about the inward normal `n`:
 
-```
+```text
 dot = v . n                         (negative when the ball is moving into the wall)
 v   = (v - 2 * dot * n) * restitution
 ```
 
 `restitution` multiplies the whole velocity, so a wall below 1 also slows the sliding component. Default restitution is 1; `infinite-loop` uses 0.98, `accumulation` 0.85, `swarm` 0.97. The math is `reflect()` in `src/sim/collide.ts`.
 
-- **Circle:** the ball touches when `distance from centre + r > arena.radius`. With `effects.breakWalls` the wall is cut into `arena.segments` arcs (48 by default, 64 for `destruction`); the arc that is hit breaks, and a ball that passes through a broken arc and is fully outside respawns at `(cx, cy - 0.25 * radius)` with a new random launch.
+- **Circle:** the ball touches when `distance from centre + r > arena.radius`. With `effects.breakWalls` on a circle arena the wall is cut into `arena.segments` arcs (48 by default, 64 for `destruction`); the arc that is hit breaks, and a ball that passes through a broken arc and is fully outside respawns at `(cx, cy - 0.25 * radius)` with a new random launch.
 - **Box:** each of the four sides is tested on its own axis.
 - **Rings:** ring `i` has radius `arena.radius - (i + 1) * ringSpacing` and a gap of `ringGapDegrees`. Outside the gap a ring is solid from both sides. Inside the gap the ball passes; with `breakWalls` the ring is destroyed as soon as the ball's edge reaches it inside the gap, moving outward, and a burst is recorded for the renderer. Destroying on entry rather than on exit is deliberate: the ring keeps turning, so by the time the ball is clear the gap has usually moved away and the pass would never be seen.
 

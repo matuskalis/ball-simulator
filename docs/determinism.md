@@ -5,7 +5,7 @@ The claim: the same seed and scene always give the same video, and the notes lan
 1. **The pipeline is reproducible.** The same inputs give the same bytes.
 2. **The two simulations agree.** The notes come from `simulate()` in Node, the picture from `simulate()` in the headless Chromium that Remotion renders with. If they differ by one bit anywhere, a bouncing ball (a chaotic system) amplifies it until the notes no longer match the picture.
 
-Everything below was measured on 30 Sep 2026 on one machine: MacBook Pro 16" M1 Pro, macOS 27.0, Node 22.22.2 and 24.5.0, Remotion 4.0.503, Chrome Headless Shell 149.0.7790.0, the 35 scene files in `scenes/`.
+Everything below was measured on 30 Sep 2026 on a MacBook Pro 16" (M1 Pro, macOS 27.0, Node 22.22.2 and 24.5.0, Remotion 4.0.503, Chrome Headless Shell 149.0.7790.0) and, where a row says so, on GitHub's `ubuntu-24.04` x86_64 runners (Node 22 and 24, the Linux build of the same Chrome Headless Shell). The scenes are the 35 files in `scenes/`.
 
 ## Results
 
@@ -30,7 +30,7 @@ Before this branch, hashing the simulation in both engines gave 32 identical sce
 
 Cause: `Math.cos` and `Math.sin` are allowed to differ in the last bit between engines, and these two do. `npm run probe:trig` runs 200,000 angles in [0, 2 pi) through both:
 
-```
+```text
                       cos                                  sin
 Node vs exact          6671 (3.34%), at most 1 ulp    6336 (3.17%), at most 1 ulp
 Chromium vs exact       285 (0.14%), at most 1 ulp     265 (0.13%), at most 1 ulp
@@ -59,7 +59,7 @@ npm run make -- scenes/readme-demo.json --out=out/b.mp4 && md5 -r out/b.mp4 publ
 
 ## What is not claimed
 
-- **Identical pixels across machines.** The simulation and the WAV are identical on macOS arm64 and Ubuntu x86_64; the rendered pixels are not (the rasteriser and the JPEG and H.264 encoders differ), so an MP4 is reproducible on one machine, not across them.
+- **Identical pixels across machines.** The simulation and the WAV are identical on macOS arm64 and Ubuntu x86_64; the rendered pixels are not (average PSNR 44.8 dB), so an MP4 is reproducible on one machine, not across them. I did not find out which stage introduces the difference: the rasteriser, the JPEG frames Remotion is configured to use, or the H.264 encoder.
 - **Other machines.** Only those two were checked: an M1 Pro running macOS 27, and GitHub's `ubuntu-24.04` x86_64 runners (`.github/workflows/ci.yml`).
 - **Other engines.** The Studio preview in Safari or Firefox uses their own `atan2` and `hypot`; only Chromium was checked.
 - **Other versions.** A different Remotion, which brings a different Chrome, could change `hypot` or `atan2`. `npm run parity` is the check to run after an upgrade.
