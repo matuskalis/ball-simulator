@@ -15,7 +15,7 @@ concurrency:
 jobs:
   test:
     name: Typecheck and test (Node ${{ matrix.node }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
       fail-fast: false
@@ -33,7 +33,7 @@ jobs:
 
   render:
     name: Render a clip and check Node against Chromium
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
@@ -51,5 +51,10 @@ jobs:
           npm run make -- scenes/readme-demo.json --scale=0.25 --frames=0-59 --out=out/ci-preview.mp4
           test "$(wc -c < out/ci-preview.mp4)" -gt 10000
           md5sum out/ci-preview.mp4
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ci-preview
+          path: out/ci-preview.mp4
+          retention-days: 7
       - name: Same simulation in Node and in the Chromium that renders the frames
         run: npm run parity
