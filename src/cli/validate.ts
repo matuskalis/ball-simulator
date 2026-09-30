@@ -43,11 +43,15 @@ if (scene.effects.growOnBounce > 0 || scene.effects.growToFillAtEnd) {
 }
 
 if (scene.arena.kind === "rings") {
-  const lastBurst = bursts[bursts.length - 1];
-  const when = lastBurst ? `${(lastBurst.frame / scene.fps).toFixed(1)}s` : "never";
-  console.log(`  rings         ${bursts.length}/${scene.arena.ringCount} destroyed, last one at ${when}`);
-  if (bursts.length < scene.arena.ringCount) {
-    console.log("  NOTE: the ball never cleared every ring. Widen arena.ringGapDegrees, lower arena.ringCount, or extend durationSeconds.");
+  if (!scene.effects.breakWalls) {
+    console.log(`  rings         ${scene.arena.ringCount} rings, they stay (effects.breakWalls is off)`);
+  } else {
+    const lastBurst = bursts[bursts.length - 1];
+    const when = lastBurst ? `${(lastBurst.frame / scene.fps).toFixed(1)}s` : "never";
+    console.log(`  rings         ${bursts.length}/${scene.arena.ringCount} destroyed, last one at ${when}`);
+    if (bursts.length < scene.arena.ringCount) {
+      console.log("  NOTE: the ball never cleared every ring. Widen arena.ringGapDegrees, lower arena.ringCount, or extend durationSeconds.");
+    }
   }
 }
 if (last.bounces < 8) console.log("  WARNING: very few bounces, the video will feel empty. Raise gravity or launchSpeed, or shrink the arena.");

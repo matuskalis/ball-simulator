@@ -1,6 +1,8 @@
-export type ArenaKind = "circle" | "rings" | "box";
+export const ARENA_KINDS = ["circle", "rings", "box"] as const;
+export type ArenaKind = (typeof ARENA_KINDS)[number];
 
-export type Instrument = "piano" | "square" | "sine" | "bell" | "pluck";
+export const INSTRUMENTS = ["piano", "square", "sine", "bell", "pluck"] as const;
+export type Instrument = (typeof INSTRUMENTS)[number];
 
 export interface Arena {
   kind: ArenaKind;
