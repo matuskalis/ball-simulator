@@ -1,5 +1,6 @@
 import type { Scene } from "../scene/types";
 import { createRng } from "./rng";
+import { cosSin } from "./trig";
 
 export interface BallState {
   x: number;
@@ -76,15 +77,15 @@ export function simulate(scene: Scene): SimResult {
   const maxBallRadius = (arena.kind === "box" ? Math.min(arena.boxWidth, arena.boxHeight) / 2 : arena.radius) * 0.98;
 
   const launch = (x: number, y: number, speed: number, c: number): Ball => {
-    const angle = rng() * TWO_PI;
-    return { x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, r: physics.ballRadius, c, frozen: false, age: 0 };
+    const [cos, sin] = cosSin(rng() * TWO_PI);
+    return { x, y, vx: cos * speed, vy: sin * speed, r: physics.ballRadius, c, frozen: false, age: 0 };
   };
 
   const balls: Ball[] = [];
   for (let i = 0; i < scene.ballCount; i += 1) {
     const spread = scene.ballCount === 1 ? 0 : arena.radius * 0.5;
-    const a = (i / scene.ballCount) * TWO_PI;
-    balls.push(launch(cx + Math.cos(a) * spread, cy + Math.sin(a) * spread, scene.launchSpeed, i % paletteSize));
+    const [cos, sin] = cosSin((i / scene.ballCount) * TWO_PI);
+    balls.push(launch(cx + cos * spread, cy + sin * spread, scene.launchSpeed, i % paletteSize));
   }
 
   const rings: RingState[] = [];
