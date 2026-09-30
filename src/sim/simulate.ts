@@ -1,4 +1,5 @@
 import type { Scene } from "../scene/types";
+import { collidePair, reflect } from "./collide";
 import { createRng } from "./rng";
 import { cosSin } from "./trig";
 
@@ -130,9 +131,7 @@ export function simulate(scene: Scene): SimResult {
 
   /** Reflect off a wall whose inward normal is (nx, ny), then apply every per-bounce effect. */
   const bounce = (ball: Ball, nx: number, ny: number) => {
-    const dot = ball.vx * nx + ball.vy * ny;
-    ball.vx = (ball.vx - 2 * dot * nx) * physics.restitution;
-    ball.vy = (ball.vy - 2 * dot * ny) * physics.restitution;
+    const dot = reflect(ball, nx, ny, physics.restitution);
 
     if (Math.abs(dot) < MIN_BOUNCE_SPEED) {
       if (effects.stickOnBounce) {
@@ -266,51 +265,11 @@ export function simulate(scene: Scene): SimResult {
       for (let j = i + 1; j < balls.length; j += 1) {
         const b = balls[j];
         if (a.frozen && b.frozen) continue;
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const minDist = a.r + b.r;
-        if (Math.abs(dx) > minDist || Math.abs(dy) > minDist) continue;
-        const dist = Math.hypot(dx, dy) || 1e-6;
-        if (dist >= minDist) continue;
+        if (!collidePair(a, b, physics.restitution)) continue;
 
         if (effects.stickOnBounce && a.frozen !== b.frozen) {
           const lander = a.frozen ? b : a;
           if (lander.age > MIN_STICK_AGE) stuck.push(lander);
-        }
-
-        const nx = dx / dist;
-        const ny = dy / dist;
-        const overlap = minDist - dist;
-        if (a.frozen) {
-          b.x += nx * overlap;
-          b.y += ny * overlap;
-        } else if (b.frozen) {
-          a.x -= nx * overlap;
-          a.y -= ny * overlap;
-        } else {
-          a.x -= nx * overlap * 0.5;
-          a.y -= ny * overlap * 0.5;
-          b.x += nx * overlap * 0.5;
-          b.y += ny * overlap * 0.5;
-        }
-
-        const relative = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
-        if (relative > 0) continue;
-        const restitution = physics.restitution;
-        if (a.frozen) {
-          const impulse = -(1 + restitution) * relative;
-          b.vx += impulse * nx;
-          b.vy += impulse * ny;
-        } else if (b.frozen) {
-          const impulse = -(1 + restitution) * relative;
-          a.vx -= impulse * nx;
-          a.vy -= impulse * ny;
-        } else {
-          const impulse = (-(1 + restitution) * relative) / 2;
-          a.vx -= impulse * nx;
-          a.vy -= impulse * ny;
-          b.vx += impulse * nx;
-          b.vy += impulse * ny;
         }
       }
     }
