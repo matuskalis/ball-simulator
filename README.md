@@ -133,11 +133,11 @@ Same seed and scene, same video. Measured on an M1 Pro (macOS 27, Node 22 and 24
 | The same scene rendered three times at 1080x1920 (Node 24 with 5 and with 2 workers, Node 22) | MP4 and WAV byte-identical |
 | 60 PNG frames, a range render against a full render, 2 against 5 workers | 60 of 60 byte-identical |
 | Simulation hash and WAV hash, 35 scenes: Node 22 against Node 24, and macOS arm64 against Ubuntu x86_64 (CI) | identical |
-| Simulation hash, Node against the Chromium that draws the frames, 35 scenes, on macOS and on Ubuntu | identical |
+| Simulation hash, the Chromium that draws the frames against the Node hash pinned in `golden.json`, 35 scenes, on macOS and on Ubuntu | identical |
 | The same quarter-size preview rendered on macOS arm64 and on Ubuntu x86_64 | not identical: 0 of 60 decoded frames match, average PSNR 44.8 dB. Each machine reproduces its own bytes. |
 | Audio decoded from the MP4 against the WAV | not identical: AAC is lossy and 42.7 ms late, the same 42.7 ms throughout |
 
-The Node-against-Chromium row has a history. Node and Chrome disagree by one bit on about 3 percent of `Math.cos` and `Math.sin` inputs, and two of the 34 scenes then in the repository (`swarm`, `infinite-loop`) drew a picture whose bounces no longer matched the notes after a second or two. `src/sim/trig.ts` now does the two calls in exact integer arithmetic, `npm run parity` keeps the two engines honest, and `test/fixtures/golden.json` pins every scene's output. [docs/determinism.md](docs/determinism.md) has the numbers, the commands and what is not claimed.
+The Node-against-Chromium row has a history. Node and Chrome disagree by one bit on about 3 percent of `Math.cos` and `Math.sin` inputs, and two of the 34 scenes then in the repository (`swarm`, `infinite-loop`) drew a picture whose bounces no longer matched the notes after a second or two. `src/sim/trig.ts` now does the two calls in exact integer arithmetic, `npm run parity` checks Chromium against the Node hashes that `test/fixtures/golden.json` pins for every scene. Renders of `swarm` and `infinite-loop` made before this change have different note times (the pictures are the same), so they will not reproduce. The exact trig costs about 3 microseconds per call. Simulating `infinite-loop` now takes about 1.6 s against 0.8 s before, because the pair collision was split into its own tested function, not because of the trig. [docs/determinism.md](docs/determinism.md) has the numbers, the commands and what is not claimed.
 
 ## Design decisions
 
@@ -163,7 +163,7 @@ The Node-against-Chromium row has a history. Node and Chrome disagree by one bit
 ```bash
 npm run typecheck    # tsc --noEmit
 npm test             # vitest: 273 tests in 12 files, 6 to 10 s
-npm run parity       # Node against headless Chromium on every scene, about a minute
+npm run parity       # Chromium's hash against the pinned Node hash, every scene, about a minute
 npm run probe:trig   # how often Math.cos and Math.sin differ between Node and Chromium
 npm run golden       # rewrite test/fixtures/golden.json after an intended physics or audio change
 ```

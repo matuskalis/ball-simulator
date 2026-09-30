@@ -15,7 +15,7 @@ Everything below was measured on 30 Sep 2026 on a MacBook Pro 16" (M1 Pro, macOS
 | The same three runs. The WAV | byte-identical, md5 `1ffb3531d42e1401a0ba9cdc7adfaa21` |
 | Frames 0 to 59 as PNG at 360x640: a range rendered with 2 workers, the same with 5, and the same frames taken from a full 0 to 359 render (3 workers) | 60 of 60 byte-identical across all three |
 | SHA-256 of the whole simulation result (every frame, note time and ring burst) and of the WAV, 35 scenes: Node 22 against Node 24 on macOS arm64, and both against Ubuntu 24.04 x86_64 in CI | identical (the record in `test/fixtures/golden.json`, written on macOS and passing on Linux) |
-| The same simulation hash, Node against headless Chromium 149, 35 scenes, on macOS arm64 and on Ubuntu x86_64 | identical (`npm run parity`, also a CI job) |
+| The simulation hash computed in headless Chromium 149 against the Node hash pinned in `golden.json`, 35 scenes, on macOS arm64 and on Ubuntu x86_64 | identical (`npm run parity`, also a CI job; with `npm test` passing on the same machine this means Node and Chromium agree) |
 | `scenes/readme-demo.json` at quarter size, frames 0 to 59, rendered on macOS arm64 and on Ubuntu x86_64 | **not** identical: the MP4s differ (166,458 against 165,984 bytes), 0 of 60 decoded frames match, average PSNR 44.8 dB (minimum 41.9). Two CI runs produced the same Linux bytes (md5 `d62fb58076570042ef5102635d2923f3`), as every macOS run produced the same macOS bytes |
 | Audio decoded from the MP4 against the WAV | **not** identical: AAC is lossy, the normalised correlation is 0.995, and the MP4 audio is 42.7 ms late |
 
@@ -47,7 +47,7 @@ The fix replaces the two uses with `cosSin()`. Because Chrome was already almost
 
 ```bash
 npm test              # golden hashes of all scenes, Node only, about 10 s
-npm run parity        # Node against headless Chromium, about a minute
+npm run parity        # Chromium's simulation hash against the pinned Node hash, about a minute
 npm run probe:trig    # the cos and sin table above, about 20 s
 
 # two renders, compared
@@ -63,4 +63,6 @@ npm run make -- scenes/readme-demo.json --out=out/b.mp4 && md5 -r out/b.mp4 publ
 - **Other machines.** Only those two were checked: an M1 Pro running macOS 27, and GitHub's `ubuntu-24.04` x86_64 runners (`.github/workflows/ci.yml`).
 - **Other engines.** The Studio preview in Safari or Firefox uses their own `atan2` and `hypot`; only Chromium was checked.
 - **Other versions.** A different Remotion, which brings a different Chrome, could change `hypot` or `atan2`. `npm run parity` is the check to run after an upgrade.
+- **`cosSin` outside what the simulation feeds it.** The simulation passes finite angles in [0, 2 pi]. The function is checked against 66 arbitrary-precision references and is exact below 2^40 in magnitude. `NaN`, infinity, denormal inputs and `-0` are not handled the way `Math.sin` handles them.
+- **Speed of the collision code.** Simulating `scenes/infinite-loop.json`, the heaviest scene, takes about 1.6 s on an M1 Pro, against 0.8 s before the pair collision was split into its own tested function (two runs each, same machine). Swapping the exact trig for `Math.cos` and `Math.sin` leaves it at 1.6 s, so the trig is not the cause; it costs about 3 microseconds per call.
 - **Seeds.** `0`, `1`, fractions such as `1.9` and `4294967297` all give the stream of seed 1, because the seed is truncated to an unsigned 32-bit integer.
