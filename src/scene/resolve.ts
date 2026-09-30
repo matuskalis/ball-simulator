@@ -94,6 +94,7 @@ export function validateScene(scene: Scene): string[] {
     problems.push("durationSeconds is shorter than one frame");
   }
   if (scene.durationSeconds > 180) problems.push("durationSeconds above 180 makes renders very slow");
+  if (/[\\/]/.test(scene.name)) problems.push(`name must not contain / or \\ because it becomes the output file name, got "${scene.name}"`);
   if (!ARENA_KINDS.includes(scene.arena.kind)) problems.push(`arena.kind must be one of ${ARENA_KINDS.join(", ")}, got "${scene.arena.kind}"`);
   if (!INSTRUMENTS.includes(scene.music.instrument)) problems.push(`music.instrument must be one of ${INSTRUMENTS.join(", ")}, got "${scene.music.instrument}"`);
   if (scene.ballCount < 1) problems.push("ballCount must be at least 1");

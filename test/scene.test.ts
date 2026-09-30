@@ -82,8 +82,14 @@ describe("validateScene", () => {
     ["a gap that is too narrow", { preset: "escape", arena: { ringGapDegrees: 5 } }, "arena.ringGapDegrees should be between 8 and 180"],
     ["a gap that is too wide", { preset: "escape", arena: { ringGapDegrees: 200 } }, "arena.ringGapDegrees should be between 8 and 180"],
     ["a ball bigger than the arena", { physics: { ballRadius: 250 } }, "physics.ballRadius is too large for the arena"],
+    ["a name that would write outside out/ and public/", { name: "../../elsewhere" }, 'name must not contain / or \\ because it becomes the output file name, got "../../elsewhere"'],
+    ["a name with a backslash", { name: "..\\elsewhere" }, "name must not contain / or"],
   ])("rejects %s", (_label, input, message) => {
     expect(check(input).join("\n")).toContain(message);
+  });
+
+  it("accepts the kinds of names scenes use: digits, dashes, dots, underscores and spaces", () => {
+    for (const name of ["01-wall-breaker", "my_scene", "v1.2", "my video"]) expect(check({ name })).toEqual([]);
   });
 
   it("does not apply the ring rules to a scene without rings", () => {
